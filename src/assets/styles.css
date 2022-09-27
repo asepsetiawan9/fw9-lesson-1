@@ -1,0 +1,45 @@
+body {
+  margin: 0;
+  padding: 0;
+  color: #FFF;
+}
+/* container {
+  max-width: '100%' 
+} */
+.parent{
+  background: url(../assets/city.jpg);
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+.input-group-text {
+  background-color: unset;
+  border: unset;
+  border-radius: unset;
+  border-bottom: 2px solid #1A374D;
+  color: #B1D0E0;
+}
+.form-control {
+  background: unset;
+  border: unset;
+  border-bottom: 2px solid #1A374D;
+  border-radius: unset;
+  -webkit-border-radius: unset;
+  -moz-border-radius: unset;
+  -ms-border-radius: unset;
+  -o-border-radius: unset;;
+
+}
+.form-control:focus{
+  border-bottom: 2px solid #1A374D;
+  box-shadow: unset;
+  outline: none;
+  background: unset;
+}
+.btn-send{
+  background: 'green';
+  border-radius: '5px';
+  padding: '10px 50px';
+  border: 'green';
+  color: '#fff';
+  font-weight: 'bold';
+}
