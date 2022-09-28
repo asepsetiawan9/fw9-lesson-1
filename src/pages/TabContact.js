@@ -7,6 +7,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { getData } from '../redux/asyncAction/contact';
 import {selectContact} from '../redux/reducers/contact';
+import ModalDelete from './ModalDelete'
 
 import axios from 'axios';
 function TabContact() {
@@ -17,11 +18,14 @@ function TabContact() {
 
   const [table, setTable] = React.useState([])
   const [pageInfo, setPageInfo] = React.useState(null)
+  const [search, setSearch] = React.useState('')
+  const [limit, setLimit] = React.useState(5)
+  const [page, setPage] = React.useState(1)
   
-  const getData = (limit=5, page=1)=> {
+  const getData = (limit=5, page=1, search='')=> {
     limit = parseInt(limit)
     page = parseInt(page)
-    const query = new URLSearchParams({limit, page}).toString()
+    const query = new URLSearchParams({limit, page, search}).toString()
     axios.get(`http://localhost:3333/contact//get-data?${query}`).then(({data})=>{
       setTable(data.result)
       setPageInfo(data.infoPage)
@@ -29,8 +33,8 @@ function TabContact() {
   }
 
   React.useEffect(()=>{
-    getData()
-  }, [])
+    getData(limit, page, search)
+  }, [limit, page, search])
 
   const getNextPage =()=>{
     getData(pageInfo.limit, pageInfo.nextPage)
@@ -42,20 +46,6 @@ function TabContact() {
   const navigate = useNavigate();
   return (
     <>
-    <Modal show={show} onHide={handleClose}>
-        <Modal.Header closeButton>
-          <Modal.Title>Modal heading</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>Woohoo, you're reading this text in a modal!</Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={handleClose}>
-            Close
-          </Button>
-          <Button variant="primary" onClick={handleClose}>
-            Save Changes
-          </Button>
-        </Modal.Footer>
-    </Modal>
     <Container className='min-vh-100 d-flex flex-column justify-content-center gap-3 parent' style={{maxWidth: '100%', height: '630px', justifyContent: 'center', alignItems: 'center'}}>
         
           <h2>All Data</h2>
@@ -69,7 +59,7 @@ function TabContact() {
             </select>
           </div>
           <div>
-            <input name='search' placeholder='Search'></input>
+            <input name="search" onChange={(e)=>{setSearch(e.target.value);}} placeholder='Search'></input>
           </div>
           <table>
             <thead>
@@ -81,13 +71,15 @@ function TabContact() {
               </tr>
             </thead>
             <tbody>
-              {table.map(o=> 
-              <tr>
+              {table.map((o, index)=> 
+              <tr key={index}>
                 <td>{o.id}</td>
                 <td>{o.name}</td>
                 <td>{o.email}</td>
                 <td>
-                  <button onClick={handleShow} style={{background: 'red', color: 'white', borderRadius: '10px'}}>Delete</button>
+                <ModalDelete
+                            id={o.id}
+                            />
                   <button 
                   onClick={() => {
                     dispatch(selectContact(o.id));
