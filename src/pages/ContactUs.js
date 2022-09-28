@@ -9,7 +9,7 @@ import * as Yup from 'yup';
 import {Link} from 'react-router-dom';
 import { useDispatch } from "react-redux";
 import { postContact } from "../redux/asyncAction/contact";
-
+import {useNavigate} from 'react-router-dom';
 
 const contactSchema = Yup.object().shape({
     email: Yup.string().email('Invalid email address format'),
@@ -76,11 +76,12 @@ const ContactForm= (props)=>{
 
 function ContactUs() {
     const dispatch = useDispatch();
-    
+    const navigate = useNavigate();
+
     const onSubmit = (value) => {
         const data = { name: value.name, email: value.email, message: value.message };
         dispatch(postContact(data));
-        // console.log('ini on regis', data);
+        navigate('/table-contact')
       };
   return (
     <>

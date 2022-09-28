@@ -25,13 +25,18 @@ export const postContact = createAsyncThunk('/contact', async request => {
     }
   });
 
-  export const getData = createAsyncThunk('getData', async request =>{
-    const result = {}
-    try {
-      const { data } = await http().get('/contact/get-data')
-      return data
-    } catch (error) {
-      result.message = error.response.data?.message;
-      return result
-    }
-  });
+  export const getContactById = createAsyncThunk(
+    'contact/detail-data',
+    async request => {
+      const result = {};
+      try {
+        // console.log('ini dari profile', request);
+        // const send = qs.stringify(request);
+        const {data} = await http().get(`/contact/detail-data/${request}`);
+        return data;
+      } catch (e) {
+        result.message = e.response.data?.message;
+        return result;
+      }
+    },
+  );

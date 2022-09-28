@@ -1,19 +1,22 @@
 import {createSlice} from '@reduxjs/toolkit';
 import {postContact} from '../asyncAction/contact';
-import {getData} from '../asyncAction/contact';
+import {getContactById} from '../asyncAction/contact';
 
 const initialState = {
   data: {},
   dataContact: {},
+  dataDetail: {},
   errorMsg: null,
-  successMsg: null
+  successMsg: null,
 };
 
 const contact = createSlice({
   name: 'contact',
   initialState,
   reducers: {
-   
+      selectContact: (state, action) => {
+      state.dataDetail.id = action.payload;
+    },
   },
   extraReducers: build => {
     build.addCase(postContact.pending, (state) => {
@@ -25,13 +28,14 @@ const contact = createSlice({
         state.errorMsg = action.payload?.errorMsg;
         state.successMsg = action.payload?.successMsg;
     });
-    build.addCase(getData.fulfilled, (state, action) => {
-        state.dataContact = action.payload;
-      });
+
+    build.addCase(getContactById.fulfilled, (state, action) => {
+      state.dataContact = action.payload.result;
+    });
   },
 });
 
-export {getData};
 export {postContact};
+export const {selectContact} = contact.actions;
 export default contact.reducer;
 
