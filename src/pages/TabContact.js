@@ -2,47 +2,42 @@
 import '../assets/styles.css';
 import React, {useState} from 'react';
 import Container from 'react-bootstrap/Container';
-import {Row, Col, Button, Modal} from 'react-bootstrap';
+// import {Row, Col, Button, Modal} from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { getData } from '../redux/asyncAction/contact';
+import { getAllContact } from '../redux/asyncAction/contact';
 import {selectContact} from '../redux/reducers/contact';
 import ModalDelete from './ModalDelete'
 
 import axios from 'axios';
 function TabContact() {
-  const [show, setShow] = useState(false);
 
-  const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
-
-  const [table, setTable] = React.useState([])
-  const [pageInfo, setPageInfo] = React.useState(null)
   const [search, setSearch] = React.useState('')
   const [limit, setLimit] = React.useState(5)
   const [page, setPage] = React.useState(1)
   
-  const getData = (limit=5, page=1, search='')=> {
-    limit = parseInt(limit)
-    page = parseInt(page)
-    const query = new URLSearchParams({limit, page, search}).toString()
-    axios.get(`http://localhost:3333/contact//get-data?${query}`).then(({data})=>{
-      setTable(data.result)
-      setPageInfo(data.infoPage)
-    })
-  }
+  // const onDelete = (id) => {
+  //   dispatch(toggleModal())
+  //   selectContact(id)
+  // }
+
+  const table = useSelector(state => state.contact.tabel);
+  const pageInfo = useSelector(state => state.contact.tabelInfo);
+  const showModal = useSelector(state => state.contact.deleteModal)
+
+  const dispatch = useDispatch();
 
   React.useEffect(()=>{
-    getData(limit, page, search)
-  }, [limit, page, search])
+    dispatch(getAllContact({}))
+  }, [])
 
   const getNextPage =()=>{
-    getData(pageInfo.limit, pageInfo.nextPage)
+    // getData(pageInfo.limit, pageInfo.nextPage)
   }
   const getPrevPage =()=>{
-    getData(pageInfo.limit, pageInfo.prevPage)
+    // getData(pageInfo.limit, pageInfo.prevPage)
   }
-  const dispatch = useDispatch();
+  
   const navigate = useNavigate();
   return (
     <>
@@ -50,7 +45,7 @@ function TabContact() {
         
           <h2>All Data</h2>
           <div >
-            <select style={{alignItem: 'left'}} onChange={(e)=>getData(e.target.value)}>
+            <select style={{alignItem: 'left'}}>
               <option value={1}>1</option>
               <option value={2}>2</option>
               <option value={3}>3</option>
@@ -78,8 +73,8 @@ function TabContact() {
                 <td>{o.email}</td>
                 <td>
                 <ModalDelete
-                            id={o.id}
-                            />
+                  id={o.id}
+                  />
                   <button 
                   onClick={() => {
                     dispatch(selectContact(o.id));

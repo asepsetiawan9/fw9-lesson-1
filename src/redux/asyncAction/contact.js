@@ -30,8 +30,6 @@ export const postContact = createAsyncThunk('/contact', async request => {
     async request => {
       const result = {};
       try {
-        // console.log('ini dari profile', request);
-        // const send = qs.stringify(request);
         const {data} = await http().get(`/contact/detail-data/${request}`);
         return data;
       } catch (e) {
@@ -40,3 +38,20 @@ export const postContact = createAsyncThunk('/contact', async request => {
       }
     },
   );
+
+  export const getAllContact = createAsyncThunk('contact/get-data', async({limit, page})=>{
+    limit = parseInt(limit) || 5
+    page  = parseInt(page) || 1
+    const query = new URLSearchParams({limit, page}).toString()
+    const {data} = await http().get(`/contact/get-data?${query}`)
+    return data
+  });
+
+  export const deleteData = createAsyncThunk('contact/delete', async({id, cb})=>{
+    // const id_data = id;
+    console.log('ini id yang mau di delete', id);
+    const {data} = await http().delete(`/contact/delete/${id}`)
+    console.log('ini datanya', data);
+    cb()
+    return 0
+  });
