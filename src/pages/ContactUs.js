@@ -83,7 +83,7 @@ function ContactUs() {
     const onSubmit = (value) => {
         const data = { name: value.name, email: value.email, message: value.message };
         dispatch(postContact(data));
-            alert(successMsg);
+            // alert(successMsg);
             navigate('/table-contact')
         // if(successMsg){
         //     dispatch(postContact(data));
