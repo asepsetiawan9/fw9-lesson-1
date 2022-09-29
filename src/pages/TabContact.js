@@ -1,25 +1,14 @@
-// import logo from '../logo.svg';
 import '../assets/styles.css';
-import React, {useState} from 'react';
-import Container from 'react-bootstrap/Container';
-// import {Row, Col, Button, Modal} from 'react-bootstrap';
+import React from 'react';
+import {Container, Button, Modal} from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { getAllContact } from '../redux/asyncAction/contact';
-import {selectContact} from '../redux/reducers/contact';
-import ModalDelete from './ModalDelete'
-
-import axios from 'axios';
+import { getAllContact, deleteData } from '../redux/asyncAction/contact';
+import {selectContact, toggleModal} from '../redux/reducers/contact';
 function TabContact() {
-
-  const [search, setSearch] = React.useState('')
-  const [limit, setLimit] = React.useState(5)
-  const [page, setPage] = React.useState(1)
   
-  // const onDelete = (id) => {
-  //   dispatch(toggleModal())
-  //   selectContact(id)
-  // }
+  const [search, setSearch] = React.useState('');
+  const [selectId, setSelectId] = React.useState('');
 
   const table = useSelector(state => state.contact.tabel);
   const pageInfo = useSelector(state => state.contact.tabelInfo);
@@ -27,17 +16,33 @@ function TabContact() {
 
   const dispatch = useDispatch();
 
-  React.useEffect(()=>{
-    dispatch(getAllContact({}))
-  }, [])
+  const confirmDelete = (id) => {
+   dispatch(toggleModal())
+   setSelectId(id)
+ }
 
-  const getNextPage =()=>{
-    // getData(pageInfo.limit, pageInfo.nextPage)
-  }
-  const getPrevPage =()=>{
-    // getData(pageInfo.limit, pageInfo.prevPage)
-  }
-  
+ const onDelete = () => dispatch(
+   deleteData({
+     id: selectId,
+     cb: ()=>{
+       dispatch(toggleModal())
+       dispatch(getAllContact({}))
+     }
+   })
+ )
+
+  React.useEffect(()=>{
+    dispatch(getAllContact({search}))
+  }, [search])
+
+  const onNext = () => dispatch(
+    getAllContact({limit: pageInfo.limit, page: pageInfo.nextPage})
+  )
+
+  const onPrev = () => dispatch(
+    getAllContact({limit: pageInfo.limit, page: pageInfo.prevPage})
+  )
+
   const navigate = useNavigate();
   return (
     <>
@@ -45,7 +50,7 @@ function TabContact() {
         
           <h2>All Data</h2>
           <div >
-            <select style={{alignItem: 'left'}}>
+            <select onChange={(e)=>dispatch(getAllContact({limit: e.target.value}))} style={{alignItem: 'left'}}>
               <option value={1}>1</option>
               <option value={2}>2</option>
               <option value={3}>3</option>
@@ -72,26 +77,46 @@ function TabContact() {
                 <td>{o.name}</td>
                 <td>{o.email}</td>
                 <td>
-                <ModalDelete
-                  id={o.id}
-                  />
-                  <button 
+                  <Button 
                   onClick={() => {
                     dispatch(selectContact(o.id));
                     navigate('/detail-contact');
-                    }} style={{background: 'green', color: 'white', borderRadius: '10px'}}>Detail</button>
+                    }} style={{background: 'green', color: 'white', borderRadius: '10px'}}>Detail</Button>
+                  <Button variant='danger'
+                  onClick={() => {
+                    confirmDelete(o.id)
+                    }} style={{color: 'white', borderRadius: '10px'}}>Delete</Button>
+                    <Button variant='warning'
+                  onClick={() => {
+                    dispatch(selectContact(o.id));
+                    navigate('/edit-contact');
+                    }} style={{color: 'black', borderRadius: '10px'}}>Edit</Button>
                 </td>
               </tr>
               )} 
             </tbody>
           </table>
           <div className='d-flex flex-row gap-3' style={{paddingTop: '20px'}}>
-            <button onClick={getPrevPage} disabled={pageInfo?.currPage<2} style={{background: 'blue', color: 'white', borderRadius: '10px'}}>Prev</button>
+            <button onClick={onPrev} disabled={pageInfo?.currPage<2} style={{background: 'blue', color: 'white', borderRadius: '10px'}}>Prev</button>
             <div> {pageInfo?.currPage} </div>
-            <button onClick={getNextPage} disabled={pageInfo?.nextPage<2} style={{background: 'blue', color: 'white', borderRadius: '10px'}}>Next</button>
+            <button onClick={onNext} disabled={pageInfo?.nextPage<2} style={{background: 'blue', color: 'white', borderRadius: '10px'}}>Next</button>
           </div>
        
     </Container>
+    <Modal show={showModal} style={{color: 'black'}}>
+        <Modal.Header>
+          <Modal.Title>Delete data</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>Are you sure about that bruh? {selectId}</Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={()=> dispatch(toggleModal())} >
+            Close
+          </Button>
+          <Button variant="danger" onClick={onDelete}>
+            Sure Delete it
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </>
   );
 }

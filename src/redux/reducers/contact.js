@@ -1,9 +1,10 @@
 import {createSlice} from '@reduxjs/toolkit';
-import {getAllContact, postContact, getContactById} from '../asyncAction/contact';
+import {getAllContact, postContact, getContactById, editContact} from '../asyncAction/contact';
 
 const initialState = {
   deleteModal: false,
   data: {},
+  dataEdit: {},
   tabel: [],
   tabelInfo: {},
   dataContact: {},
@@ -33,6 +34,15 @@ const contact = createSlice({
         state.errorMsg = action.payload?.errorMsg;
         state.successMsg = action.payload?.successMsg;
     });
+    build.addCase(editContact.pending, (state) => {
+      state.errorMsg = null;
+      state.successMsg = null;
+    });
+  build.addCase(editContact.fulfilled, (state, action) => {
+      state.dataEdit = action.payload.data;
+      state.errorMsg = action.payload?.errorMsg;
+      state.successMsg = action.payload?.successMsg;
+  });
     build.addCase(getContactById.fulfilled, (state, action) => {
         state.dataContact = action.payload.result;
     });
@@ -43,7 +53,7 @@ const contact = createSlice({
   },
 });
 
-export {postContact};
+export {postContact, editContact};
 export const {selectContact, toggleModal} = contact.actions;
 export default contact.reducer;
 

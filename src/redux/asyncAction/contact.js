@@ -39,10 +39,11 @@ export const postContact = createAsyncThunk('/contact', async request => {
     },
   );
 
-  export const getAllContact = createAsyncThunk('contact/get-data', async({limit, page})=>{
+  export const getAllContact = createAsyncThunk('contact/get-data', async({limit, page, search})=>{
     limit = parseInt(limit) || 5
     page  = parseInt(page) || 1
-    const query = new URLSearchParams({limit, page}).toString()
+    search = search || ''
+    const query = new URLSearchParams({limit, page, search}).toString()
     const {data} = await http().get(`/contact/get-data?${query}`)
     return data
   });
@@ -51,7 +52,32 @@ export const postContact = createAsyncThunk('/contact', async request => {
     // const id_data = id;
     console.log('ini id yang mau di delete', id);
     const {data} = await http().delete(`/contact/delete/${id}`)
-    console.log('ini datanya', data);
+    // console.log('ini datanya', data);
     cb()
     return 0
   });
+
+
+  export const editContact = createAsyncThunk('/contact/edit', async ({id, dataEdit}) => {
+    const result = {};
+    console.log('ini dari edit', id);
+    try {
+      const send = qs.stringify(dataEdit);
+      const {data} = await http().patch(
+        `/contact/edit/${id}`,
+        send,
+        {
+          headers: {
+            'content-type': 'application/x-www-form-urlencoded',
+          },
+        },
+      );
+      result.data = data.result;
+      result.successMsg = data.message;
+      return result;
+    } catch (e) {
+      result.errorMsg = e.response.data.message;
+      return result;
+    }
+  });
+

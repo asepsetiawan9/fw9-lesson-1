@@ -1,11 +1,9 @@
 // import logo from '../logo.svg';
 import '../assets/styles.css';
-import React, {useState} from 'react';
+import React from 'react';
 import Container from 'react-bootstrap/Container';
-import {Row, Col, Button, Modal} from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import {getContactById} from '../redux/asyncAction/contact';
-import axios from 'axios';
 
 function DetailContact() {
     const dispatch = useDispatch();

@@ -28,7 +28,6 @@ function ModalDelete(id) {
   
     return (
       <>
-      {/* console.log(id); */}
         <button style={{background: 'red', color: 'white', borderRadius: '10px'}} onClick={() => confirmDelete({id})}>
         Delete
         </button>

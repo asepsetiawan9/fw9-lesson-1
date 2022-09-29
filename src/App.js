@@ -7,6 +7,7 @@ import { store } from './redux/store';
 import ContactUs from './pages/ContactUs';
 import TabContact from './pages/TabContact';
 import DetailContact from './pages/DetailContact';
+import EditContact from './pages/EditContact';
 
 const App = () => {
   return (
@@ -14,6 +15,7 @@ const App = () => {
       <Route path="/" element={<ContactUs />}/>
       <Route path="/table-contact" element={<TabContact />}/>
       <Route path="/detail-contact" element={<DetailContact />}/>
+      <Route path="/edit-contact" element={<EditContact />}/>
     </Routes>
   );
 }
