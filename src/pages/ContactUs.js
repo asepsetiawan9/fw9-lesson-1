@@ -6,12 +6,12 @@ import {Row, Col, Form} from 'react-bootstrap';
 import {FiMapPin, FiPhone, FiMail} from "react-icons/fi";
 import {Formik} from 'formik';
 import * as Yup from 'yup';
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { postContact } from "../redux/asyncAction/contact";
 import {useNavigate} from 'react-router-dom';
 
 const contactSchema = Yup.object().shape({
-    email: Yup.string().email('Invalid email address format'),
+    email: Yup.string().email('Invalid email address format').required('Required'),
     name: Yup.string()
             .test(
                 'len',
@@ -22,7 +22,7 @@ const contactSchema = Yup.object().shape({
                     }
                     return  ((val.length === 0 || (val.length <= 20)))
                 }
-            ),
+            ).required('Required'),
     message: Yup.string()
     .test(
         'len',
@@ -33,7 +33,7 @@ const contactSchema = Yup.object().shape({
             }
             return  ((val.length === 0 || (val.length <= 250)))
         }
-    ),
+    ).required('Required'),
   })
 
 const ContactForm= (props)=>{
@@ -76,11 +76,19 @@ const ContactForm= (props)=>{
 function ContactUs() {
     const dispatch = useDispatch();
     const navigate = useNavigate();
+    const successMsg = useSelector((state) => state.contact.successMsg);
+    const errorMsg = useSelector((state) => state.contact.errorMsg);
+    console.log(successMsg);
 
     const onSubmit = (value) => {
         const data = { name: value.name, email: value.email, message: value.message };
-        dispatch(postContact(data));
-        navigate('/table-contact')
+        if(successMsg){
+            dispatch(postContact(data));
+            alert(successMsg);
+            navigate('/table-contact')
+        }else{
+            alert(errorMsg);
+        }
       };
   return (
     <>
