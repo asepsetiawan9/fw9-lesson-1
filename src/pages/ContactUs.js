@@ -8,7 +8,7 @@ import {Formik} from 'formik';
 import * as Yup from 'yup';
 import { useDispatch, useSelector } from "react-redux";
 import { postContact } from "../redux/asyncAction/contact";
-import {useNavigate} from 'react-router-dom';
+import {useNavigate, Link} from 'react-router-dom';
 
 const contactSchema = Yup.object().shape({
     email: Yup.string().email('Invalid email address format').required('Required'),
@@ -83,8 +83,8 @@ function ContactUs() {
     const onSubmit = (value) => {
         const data = { name: value.name, email: value.email, message: value.message };
         dispatch(postContact(data));
-            // alert(successMsg);
-            navigate('/table-contact')
+            alert(successMsg);
+            // navigate('/table-contact')
         // if(successMsg){
         //     dispatch(postContact(data));
         //     alert(successMsg);
@@ -93,6 +93,8 @@ function ContactUs() {
         //     alert(errorMsg);
         // }
       };
+
+      
   return (
     <>
     <Container className='parent d-flex' style={{maxWidth: '100%', height: '630px', justifyContent: 'center', alignItems: 'center'}}>
@@ -139,6 +141,14 @@ function ContactUs() {
                         </div>
                     </div>
                 </div>
+                <div className='d-flex flex-row gap-2 align-items-center'>
+                    <div>
+                        <Link to={'/table-contact'} style={{background: 'green', borderRadius: '5px', padding: '10px 70px', border: 'green', color: '#fff', fontWeight: 'bold'}}>
+                            List All Data
+                        </Link>
+                    </div>
+                </div>
+                
             </Col>
             <Col sm={6} >
                 <div className='d-flex' style={{justifyContent:'center'}}>

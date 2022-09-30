@@ -8,6 +8,7 @@ import * as Yup from 'yup';
 import { editContact } from "../redux/asyncAction/contact";
 import {useNavigate} from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
+import {getContactById} from '../redux/asyncAction/contact';
 
 const contactSchema = Yup.object().shape({
     email: Yup.string().email('Invalid email address format'),
@@ -36,6 +37,15 @@ const contactSchema = Yup.object().shape({
   })
 
 const ContactForm= (props)=>{
+    // const dispatch = useDispatch();
+
+    // const id_contact = useSelector(state => state.contact.dataDetail);
+    // const contact = useSelector(state => state.contact.dataContact);
+    // const nameUser = contact[0].name;
+    // // console.log(contact.name);
+    // React.useEffect(() => {
+    //     dispatch(getContactById(id_contact.id));
+    //     }, []);
 
     return(
     <Form noValidation onSubmit={props.handleSubmit} style={{width: '300px', height: '400px', background: '#fff'}}>
@@ -44,10 +54,12 @@ const ContactForm= (props)=>{
                 EDIT YOUR MESSAGE
             </div>
             <div className='d-flex flex-column gap-3'>
-                <Form.Control placeholder='Name' 
+                {/* <input>{contact.name}</input> */}
+                <Form.Control 
                 name='name' 
                 onChange={props.handleChange} type='text' 
                 isInvalid={!!props.errors.name}
+
                 value={props.values.name}/>
                 <Form.Control.Feedback type='invalid'> {props.errors.name}</Form.Control.Feedback>
 
@@ -77,6 +89,12 @@ function EditContact() {
     const navigate = useNavigate();
 
     const id_contact = useSelector(state => state.contact.dataDetail);
+    const contact = useSelector(state => state.contact.dataContact);
+    // console.log(contact);
+    React.useEffect(() => {
+        dispatch(getContactById(id_contact.id));
+        }, []);
+// console.log(contact);
     const successMsg = useSelector((state) => state.contact.successMsg);
     console.log(id_contact);
 
