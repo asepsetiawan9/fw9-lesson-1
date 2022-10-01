@@ -84,22 +84,15 @@ function ContactUs() {
         const data = { name: value.name, email: value.email, message: value.message };
         dispatch(postContact(data));
             alert(successMsg);
-            // navigate('/table-contact')
-        // if(successMsg){
-        //     dispatch(postContact(data));
-        //     alert(successMsg);
-        //     navigate('/table-contact')
-        // }else{
-        //     alert(errorMsg);
-        // }
+
       };
 
       
   return (
     <>
-    <Container className='parent d-flex' style={{maxWidth: '100%', height: '630px', justifyContent: 'center', alignItems: 'center'}}>
-        <Row style={{justifyContent: 'center', alignItems: 'center'}}>
-            <Col sm={6} className='d-flex flex-column gap-5'>
+    <Container className='parent d-flex' style={{}}>
+        <Row className='mainRow'>
+            <Col sm={6} className='d-flex flex-column gap-5 firstCol'>
                 <div className='d-flex flex-row gap-2 align-items-center' >
                     <div>
                         <FiMapPin style={{fontSize: '30px'}}/>
@@ -113,7 +106,7 @@ function ContactUs() {
                         </div>
                     </div>
                 </div>
-
+                <div className='d-flex flex-column gap-5 firsColPhone'>
                 <div className='d-flex flex-row gap-2 align-items-center'>
                     <div>
                         <FiPhone style={{fontSize: '30px'}}/>
@@ -141,6 +134,7 @@ function ContactUs() {
                         </div>
                     </div>
                 </div>
+                </div>
                 <div className='d-flex flex-row gap-2 align-items-center'>
                     <div>
                         <Link to={'/table-contact'} style={{background: 'green', borderRadius: '5px', padding: '10px 70px', border: 'green', color: '#fff', fontWeight: 'bold'}}>
@@ -150,7 +144,7 @@ function ContactUs() {
                 </div>
                 
             </Col>
-            <Col sm={6} >
+            <Col sm={6} className='secCol'>
                 <div className='d-flex' style={{justifyContent:'center'}}>
                     <Formik
                     onSubmit={onSubmit}

@@ -20,11 +20,11 @@ function DetailContact() {
         
           <h2>Detail Contact</h2>
           <div style={{fontWeight: 'bold'}}>Name</div>
-          <div>{contact[0]?.name || 'Name sender contact'}</div>
+          <div>{contact?.name || 'Name sender contact'}</div>
           <div style={{fontWeight: 'bold'}}>Email</div>
-          <div>{contact[0]?.email || 'Email sender contact'}</div>
+          <div>{contact?.email || 'Email sender contact'}</div>
           <div style={{fontWeight: 'bold'}}>Message</div>
-          <div>{contact[0]?.message || 'Message sender contact'}</div>
+          <div>{contact?.message || 'Message sender contact'}</div>
  
     </Container>
     </>

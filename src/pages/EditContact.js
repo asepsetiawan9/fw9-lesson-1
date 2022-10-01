@@ -9,6 +9,7 @@ import { editContact } from "../redux/asyncAction/contact";
 import {useNavigate} from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import {getContactById} from '../redux/asyncAction/contact';
+// import {detailContact} from '../redux/reducers/contact';
 
 const contactSchema = Yup.object().shape({
     email: Yup.string().email('Invalid email address format'),
@@ -37,25 +38,27 @@ const contactSchema = Yup.object().shape({
   })
 
 const ContactForm= (props)=>{
-    // const dispatch = useDispatch();
+    const dispatch = useDispatch();
+    React.useEffect(() => {
+        dispatch(getContactById(id_contact.id));
+        }, []);
 
-    // const id_contact = useSelector(state => state.contact.dataDetail);
-    // const contact = useSelector(state => state.contact.dataContact);
-    // const nameUser = contact[0].name;
-    // // console.log(contact.name);
-    // React.useEffect(() => {
-    //     dispatch(getContactById(id_contact.id));
-    //     }, []);
+    const id_contact = useSelector(state => state.contact.dataDetail);
+    const contact = useSelector(state => state.contact.dataContact);
+    const nameContact = contact.name;
+    const emailContact = contact.email;
+    const messageContact = contact.message;
 
     return(
-    <Form noValidation onSubmit={props.handleSubmit} style={{width: '300px', height: '400px', background: '#fff'}}>
-        <div className='d-flex flex-column gap-3' style={{justifyContent: 'center', alignItems:'center'}}>
+    <Form noValidation onSubmit={props.handleSubmit} style={{}}>
+        <div className='d-flex flex-column gap-3' style={{width: '300px', height: '400px', background: '#fff', justifyContent: 'center', alignItems:'center'}}>
             <div style={{color: 'green', fontWeight: 'bold', paddingTop: '40px'}}>
                 EDIT YOUR MESSAGE
             </div>
             <div className='d-flex flex-column gap-3'>
-                {/* <input>{contact.name}</input> */}
+
                 <Form.Control 
+                defaultValue = {props.nameContact}
                 name='name' 
                 onChange={props.handleChange} type='text' 
                 isInvalid={!!props.errors.name}
@@ -90,13 +93,16 @@ function EditContact() {
 
     const id_contact = useSelector(state => state.contact.dataDetail);
     const contact = useSelector(state => state.contact.dataContact);
-    // console.log(contact);
+    const nameContact = contact.name;
+    const emailContact = contact.email;
+    const messageContact = contact.message;
+
     React.useEffect(() => {
         dispatch(getContactById(id_contact.id));
         }, []);
-// console.log(contact);
+    
     const successMsg = useSelector((state) => state.contact.successMsg);
-    console.log(id_contact);
+
 
     const onEdit = (value) => dispatch(
         editContact({
@@ -110,13 +116,13 @@ function EditContact() {
     <>
     <Container className='parent d-flex' style={{maxWidth: '100%', height: '630px', justifyContent: 'center', alignItems: 'center'}}>
         <Row style={{justifyContent: 'center', alignItems: 'center'}}>
-            <Col sm={6} className='d-flex flex-column gap-5'>
+            <Col sm={6} className='d-flex flex-column gap-5 firstCol'>
                 
 
             <div className='d-flex flex-row gap-2 align-items-center'>
                 <div>
                     <div style={{fontWeight: 'bold'}}>
-                        WELCOME
+                        Edit Message
                     </div>
                 </div>
             </div>
@@ -126,7 +132,7 @@ function EditContact() {
                 <div className='d-flex' style={{justifyContent:'center'}}>
                     <Formik
                     onSubmit={onEdit}
-                    initialValues={{name: '', email: '', message: ''}}
+                    initialValues={{name: nameContact, email: emailContact, message: messageContact}}
                     validationSchema={contactSchema}>
                         {(props)=><ContactForm {...props}/>}
                     </Formik>

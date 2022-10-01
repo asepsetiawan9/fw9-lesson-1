@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { getAllContact, deleteData } from '../redux/asyncAction/contact';
 import {selectContact, toggleModal} from '../redux/reducers/contact';
+
 function TabContact() {
   
   const [search, setSearch] = React.useState('');
@@ -47,21 +48,23 @@ function TabContact() {
   return (
     <>
     <Container className='min-vh-100 d-flex flex-column justify-content-center gap-3 parent' style={{maxWidth: '100%', height: '630px', justifyContent: 'center', alignItems: 'center'}}>
-        
-          <h2>All Data</h2>
-          <div >
-            <select onChange={(e)=>dispatch(getAllContact({limit: e.target.value}))} style={{alignItem: 'left'}}>
-              <option value={1}>1</option>
-              <option value={2}>2</option>
-              <option value={3}>3</option>
-              <option value={4}>4</option>
-              <option value={5} selected>5</option>
-            </select>
+        <div className='d-flex flex-column gap-3'>
+          <h2 style={{textAlign: 'center'}}>All Data</h2>
+          <div className='d-flex' style={{justifyContent: 'space-between'}}>
+            <div>
+              <select onChange={(e)=>dispatch(getAllContact({limit: e.target.value}))} style={{alignItem: 'left'}}>
+                <option value={1}>1</option>
+                <option value={2}>2</option>
+                <option value={3}>3</option>
+                <option value={4}>4</option>
+                <option value={5} selected>5</option>
+              </select>
+            </div>
+            <div >
+              <input style={{width: '100%', borderRadius: '10px'}} name="search" onChange={(e)=>{setSearch(e.target.value);}} placeholder='Search'></input>
+            </div>
           </div>
-          <div>
-            <input name="search" onChange={(e)=>{setSearch(e.target.value);}} placeholder='Search'></input>
-          </div>
-          <table>
+          <table id="customers">
             <thead>
               <tr>
                 <th>Id</th>
@@ -76,7 +79,7 @@ function TabContact() {
                 <td>{o.id}</td>
                 <td>{o.name}</td>
                 <td>{o.email}</td>
-                <td>
+                <td className='d-flex gap-2'>
                   <Button 
                   onClick={() => {
                     dispatch(selectContact(o.id));
@@ -96,12 +99,12 @@ function TabContact() {
               )} 
             </tbody>
           </table>
-          <div className='d-flex flex-row gap-3' style={{paddingTop: '20px'}}>
+          <div className='d-flex flex-row gap-3' style={{paddingTop: '20px', justifyContent: 'center' ,alignItems: 'center'}}>
             <button onClick={onPrev} disabled={pageInfo?.currPage<2} style={{background: 'blue', color: 'white', borderRadius: '10px'}}>Prev</button>
             <div> {pageInfo?.currPage} </div>
             <button onClick={onNext} disabled={pageInfo?.nextPage<2} style={{background: 'blue', color: 'white', borderRadius: '10px'}}>Next</button>
           </div>
-       
+        </div> 
     </Container>
     <Modal show={showModal} style={{color: 'black'}}>
         <Modal.Header>
